@@ -110,13 +110,17 @@ def get_deployed_revision( user_input, req_url, res_list ):
             # Extracting data from response object
             res = response.json()
             for val in res['environment']:
+                # Check if env name is equal to the user input env.
+                # If api is not deployed in any env, then the array will be empty
                 if val['name'] == user_input['env']:
+                    # Check if the revision is not an empty array.
+                    # If api is not deployed in an env, then the array will be empty
                     if val['revision'] != []:
                         value_pair = (value, val['revision'][0]['name'])
                         res_data.append(value_pair)
                         count += 1
 
-    print("Total of {} {} are deployed in {}.".format(count, user_input['config'], user_input['env']))
+    print("{} deployed in {} : {}".format(user_input['config'], user_input['env'], count))
 
     return res_data
 
@@ -146,7 +150,3 @@ def get_details(user_input, req_url, res_data):
             logging.error("Could not download {}".format(val[0]))
 
     return res_details
-
-
-
-

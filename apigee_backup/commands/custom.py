@@ -25,9 +25,6 @@ def backup_custom(user_input, resources_list):
                 # Create the backup by dumping all the data to json file and save it in the system
                 helpers.create_backup_file( user_input, res_details )
                 print( "Backup Completed !!" )
-            else:
-                print("No {} found !".format( user_input['backup']))
-
     else:
         # Set the request url to get the data
         req_url = set_request_url( user_input )
@@ -70,16 +67,12 @@ def get_list(user_input, req_url):
     try:
         # Making HTTP call and saving the response
         response = requests.get( req_url, auth=(user_input['username'], user_input['pass']))  # type: Response
-        if response.status_code == 200 and len(response.json()) > 0:
+        if response.status_code == 200:
             # Extracting data from response object
             res_list = response.json()
             print("{} count: {}".format(user_input['config'],len(res_list)))
-        elif response.status_code == 200 and len(response.json()) == 0:
-            logging.error("There are no {} found. Status Code {}".format(user_input['config'], response.status_code))
-            quit()
         else:
             logging.error( "Error Occurred: Status code {}".format( response.status_code ) )
-            quit()
 
     except Exception as e:
         print( e )
