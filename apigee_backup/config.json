@@ -1,0 +1,27 @@
+{
+    "options": [
+          "custom",
+          "publish",
+          "bundle"
+    ],
+    "host": "https://api.enterprise.apigee.com/",
+	"custom": [
+          "keyvaluemaps",
+          "targetservers",
+          "keystores",
+          "virtualhosts",
+          "references",
+          "all"
+    ],
+    "publish": [
+          "apiproducts",
+          "developers",
+          "apps",
+          "all"
+    ],
+    "bundle": [
+          "sharedflows",
+          "apis",
+          "all"
+    ]
+}
