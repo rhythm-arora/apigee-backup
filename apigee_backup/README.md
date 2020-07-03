@@ -28,7 +28,7 @@ Below are the configurations/entities for which you can take the backup,
     > <https://www.python.org/downloads/>
 
 - To get the tool, clone this repository.
-    > https://github.com/rhythm-arora/APIGEE.apigee_backup.git
+    > https://github.com/rhythm-arora/APIGEE.git
 
 - Development Setup
 
