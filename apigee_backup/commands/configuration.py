@@ -4,41 +4,41 @@ from requests.models import Response
 
 import helpers
 
-def backup_custom(user_input, resources_list):
+def backup_configuration(user_input, resources_list):
     """
-    Based on the config value entered by user, retrieval of data action is decided.
-    If config is "all", then you need to run for loop to backup for all the config values
+    Based on the item value entered by user, action on retrieving the data is decided.
+    If item is "all", then you need to run for loop to backup all the items
     """
-    if user_input['config'] == 'all':
-        # Call the functions to get the data for each config/backup value
+    if user_input['item'] == 'all':
+        # Call the functions to get the data for each item/backup value
         for val in range(len(resources_list)-1):
-            # Change the value of config/backup from all to each valid value in url_resource
-            user_input['config'] = resources_list[val]
+            # Change the value of item/backup from all to each valid value in url_resource
+            user_input['item'] = resources_list[val]
             # Set the request url to get the data
             req_url = set_request_url(user_input)
-            # Get the list of required config
+            # Get the list of required item
             res_list = get_list( user_input, req_url )
             # If we received the list with at least one value, then continue
             if len(res_list) != 0:
-                # Get the details of required config by passing the list received in previous step
+                # Get the details of required item by passing the list received in previous step
                 res_details = get_details( user_input, req_url, res_list )
                 # Create the backup by dumping all the data to json file and save it in the system
                 helpers.create_backup_file( user_input, res_details )
                 print( "Backup Completed !!" )
+
     else:
         # Set the request url to get the data
         req_url = set_request_url( user_input )
-        # Get the list of config
+        # Get the list of item
         res_list = get_list( user_input, req_url )
         # If we received the list with at least one value, then continue
         if len( res_list ) != 0:
-            # Get the details of required config by passing the list received in previous step
+            # Get the details of required item by passing the list received in previous step
             res_details = get_details( user_input, req_url, res_list )
             # Create the backup by dumping all the data to json file and save it in the system
             helpers.create_backup_file( user_input, res_details )
             print( "Backup Completed !!" )
-        else:
-            print("No {} found !".format( user_input['backup']))
+            
 
 def set_request_url(user_input):
     """
@@ -46,10 +46,10 @@ def set_request_url(user_input):
     :param user_input:
     """
     # Extract the value from user_input to be passed in URL
-    org, resource, env = user_input['org'], user_input['config'], user_input['env']
+    org, resource, env = user_input['org'], user_input['item'], user_input['env']
 
     # Get the host from the config file
-    host = helpers.load_config(key='host')
+    host = helpers.load_value(key='host')
 
     # Creating http request URL
     req_url = host + 'v1/organizations/' + org + '/environments/' + env + '/' + resource
@@ -59,7 +59,7 @@ def set_request_url(user_input):
 
 def get_list(user_input, req_url):
     """
-    Get the list of config in an environment of APIGEE ORG
+    Get the list of item in an environment of APIGEE ORG
     :param req_url:
     :param user_input:
     """
@@ -70,7 +70,7 @@ def get_list(user_input, req_url):
         if response.status_code == 200:
             # Extracting data from response object
             res_list = response.json()
-            print("{} count: {}".format(user_input['config'],len(res_list)))
+            print("{} count: {}".format(user_input['item'],len(res_list)))
         else:
             logging.error( "Error Occurred: Status code {}".format( response.status_code ) )
 
@@ -83,7 +83,7 @@ def get_list(user_input, req_url):
 
 def get_details(user_input, req_url, res_list):
     """
-    Get the details of config in an environment of APIGEE ORG
+    Get the details of item in an environment of APIGEE ORG
     :param user_input:
     :param req_url:
     :param res_list:
@@ -100,7 +100,7 @@ def get_details(user_input, req_url, res_list):
             res_data = response.json()
             res_details.append( res_data )
         else:
-            logging.error( 'Error Occurred: Status code {} for {} {}'.format( response.status_code, value, user_input['config'] ) )
+            logging.error( 'Error Occurred: Status code {} for {} {}'.format( response.status_code, value, user_input['item'] ) )
 
     return res_details
 

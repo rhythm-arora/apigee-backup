@@ -1,6 +1,6 @@
 # apigee-backup
 
-Use this tool to take backup of configuration information and entities from Apigee Edge organization/environment.
+Use this tool to take backup of configuration item and entities from Apigee Edge organization/environment.
 
 
 ## Backup Configurations
@@ -10,7 +10,7 @@ Below are the configurations/entities for which you can take the backup,
 - bundle
     - apis
     - sharedflows
-- custom
+- configuration
     - keyvaluemaps
     - targetservers
     - keystores
@@ -24,7 +24,7 @@ Below are the configurations/entities for which you can take the backup,
 
 ## Installing the Tool
 
-- Downlaod and Install Python
+- Download and Install Python
     > <https://www.python.org/downloads/>
 
 - To get the tool, clone this repository.
@@ -50,6 +50,7 @@ Once you install the tool , you can run it to get the data for your org/env.
 Following command needs to be run,
 
 1)
+
 ```
 python index.py -u <username> -o <org> -b <backup>
 ```
@@ -63,14 +64,16 @@ python index.py -u <username> -o <org> -b <backup>
     c) backup - APIGEE configuration you want to take backup. 
     Acceptable Values: 
 
-        - custom 
+        - configuration 
         - publish 
         - bundle
 
 2) Next, you will be asked to enter your APIGEE password.
+
 ```
 Password :
 ```
+
 3) If username and password is correct, then you will be asked further questions like env and config based on backup value provided.
 
 
@@ -87,7 +90,7 @@ The following folder structure with data will be created in your current directo
             - apis_{env}_{datetime} (Directory)
                 - api-1
                 - api-2
-        - custom (Directory)
+        - configuration (Directory)
             - keyvaluemaps_{env}_{datetime}
             - targetservers_{env}_{datetime}
             - keystores_{env}_{datetime}
@@ -99,7 +102,7 @@ The following folder structure with data will be created in your current directo
             - apps_{env}_{datetime}
     - {org}
         - bundle
-        - custom
+        - configuration
         - publish
     
 
@@ -122,12 +125,15 @@ The following folder structure with data will be created in your current directo
     In this, the all helping methods are defined are which used to perform particular action
 
 - commands
+
     - bundle.py
 
         This is code file for taking backup for, config=bundle
-    - custom.py
+
+    - configuration.py
 
         This is code file for taking backup for, config=publish
+
     - publish.py
     
         This is code file for taking backup for, config=publish

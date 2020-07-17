@@ -11,21 +11,21 @@ from datetime import datetime
 from requests.models import Response
 
 
-def load_config(key):
+def load_value(key):
     """
-    Get the required values fro config.json file
+    Get the required values from config.json file
     :param key:
     """
     with open( "config.json" ) as json_file:
         json_data = json.load( json_file )
-        config = json_data[key]
+        value = json_data[key]
 
-    return config
+    return value
 
 
 def user_args(backup_options):
     """
-    Takes input from user like username, org, env and backup
+    Takes input from user like username, org and backup options
     """
     try:
         # Construct the input argument parser
@@ -36,16 +36,16 @@ def user_args(backup_options):
         ap.add_argument( "-o", "--org", required=True,
                          help="APIGEE Org Name" )
         ap.add_argument("-b", "--backup", required=True, choices=backup_options,
-                         help="Things for backup i.e. custom, publish or bundle")
+                         help="Options for backup i.e. configuration, publish or bundle")
 
-        # The vars() function returns the __dict__ attribute of the given object.
+        # The vars() function returns the __dict__ attribute of the given object
         args = vars( ap.parse_args() )
 
         # Prompt user to enter password
         user_pass = getpass.getpass( prompt='Password : ' )
         args['pass'] = user_pass
 
-    except Exception as e:
+    except:
         logging.error( "Exception occurred", exc_info=True )
 
     return args
@@ -56,7 +56,7 @@ def get_env_list(user_input):
         Based on organisation provided by user, get the environment list from APIGEE
         :param user_input:
         """
-        # Creating http request to get app ids
+        # Creating http request to get env list
         url = 'https://api.enterprise.apigee.com/v1/organizations/' + user_input['org'] + '/environments/'
 
         # Making HTTP call and saving the response
@@ -72,29 +72,29 @@ def get_env_list(user_input):
 
 def other_details(user_input, env_list, resources_list):
     """
-    Ask the user for more inputs like, environment and config that user wants to take backup for
+    Ask the user for further input like, environment and item that user wants to backup
     :param user_input:
     :param env_list:
     :param resources_list:
     """
-    if user_input['backup'] in ('custom', 'bundle'):
+    if user_input['backup'] in ('configuration', 'bundle'):
         questions = [
             inquirer.List(
                 "env",
-                message="Select the env name?",
+                message="Select the env name",
                 choices=env_list,
             ),
             inquirer.List(
-                "config",
-                message="Select the config name you want to take backup?",
+                "item",
+                message="Select the item name you want to take backup",
                 choices=resources_list,
             ),
         ]
     else:
         questions = [
             inquirer.List(
-                "config",
-                message="Select the config name you want to take backup?",
+                "item",
+                message="Select the item name you want to take backup",
                 choices=resources_list,
             ),
         ]
@@ -116,16 +116,18 @@ def create_backup_file(user_input, res_details):
     # Convert the data into a JSON string
     res_json = json.dumps(res_details)
 
-    # Set File Path
+    # Set file path
     file_path = os.getcwd() + "/backup/" + user_input['org'] + "/" + user_input['backup'] + "/"
+    
+    # If file path does not exists, then create the directory
     if not path.exists(file_path):
         os.makedirs(file_path)
 
     # Set the filename
     if user_input['backup'] == 'publish':
-        file_name = user_input['config'] + "_" + now.strftime("%d-%m-%YT%H%M") + ".json"
+        file_name = user_input['item'] + "_" + now.strftime("%d-%m-%YT%H%M") + ".json"
     else:
-        file_name = user_input['env'] + "_" + user_input['config'] + "_" + now.strftime("%d-%m-%YT%H%M") + ".json"
+        file_name = user_input['env'] + "_" + user_input['item'] + "_" + now.strftime("%d-%m-%YT%H%M") + ".json"
 
     # Write the data to file
     with open(file_path + file_name , "w" ) as file:
@@ -141,13 +143,14 @@ def create_backup_bundle(user_input, res_details):
     for val in res_details:
         now = datetime.today()
 
-        # Save the value fo zip object in file variable
+        # Save the value of zip object in file variable
         file = val[2]
         try:
-            # Set File Path
+            # Set file path
             file_path = os.getcwd() + "/backup/" + user_input['org'] + "/" + user_input['backup'] +\
-                        "/" + user_input['config'] + "_"  + user_input['env'] + "_" + now.strftime("%d-%m-%YT%H%M") + "/"
+                        "/" + user_input['env'] + "_"  + user_input['item'] +   "_" + now.strftime("%d-%m-%YT%H%M") + "/"
 
+            # If file path does not exists, then create the directory
             if not path.exists( file_path ):
                 os.makedirs( file_path )
 

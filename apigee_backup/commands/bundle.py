@@ -8,33 +8,36 @@ import helpers
 
 def backup_bundle(user_input,resources_list):
     """
-    Based on the config value entered by user, retrieval of data action is decided.
-    If config is "all", then you need to run for loop to backup all the config
+    Based on the item value entered by user, action on retrieving the data is decided.
+    If item is "all", then you need to run for loop to backup all the items
     """
-    if user_input['config'] == 'all':
-        # Call the functions to get the data for each config/backup value
+    if user_input['item'] == 'all':
+        # Call the functions to get the data for each item/backup value
         for val in range( len( resources_list ) - 1 ):
-            # Change the value of config/backup from all to each valid value in url_resource
-            user_input['config'] = resources_list[val]
+            # Change the value of item/backup from all to each valid value in url_resource
+            user_input['item'] = resources_list[val]
             # Set the request url to get the data
             req_url = set_request_url( user_input )
-            # Get the list of required config
+            # Get the list of required item
             res_list = get_list( user_input, req_url )
+
             if len(res_list) != 0:
                 # Get the deployed revision of shared flow in particular env.
                 # Then append it to res_data along with shared flow name
                 res_data = get_deployed_revision( user_input, req_url, res_list )
-                # Get shared flow bundle
-                res_details = get_details( user_input, req_url, res_data )
-                # Create the backup
-                helpers.create_backup_bundle( user_input, res_details )
-                print( "Backup Completed !!" )
+
+                if len(res_data) != 0:
+                    # Get shared flow bundle
+                    res_details = get_details( user_input, req_url, res_data )
+                    # Create the backup
+                    helpers.create_backup_bundle( user_input, res_details )
+                    print( "Backup Completed !!" )
             else:
-                print("No {} found !".format( user_input['backup']))
+                print("No {} found !".format( user_input['item']))
     else:
         # Set the request url to get the data
         req_url = set_request_url( user_input )
-        # Get the list of required config
+        # Get the list of required item
         res_list = get_list( user_input, req_url )
         if len( res_list ) != 0:
             # Get the deployed revision of shared flow in particular env.
@@ -46,7 +49,7 @@ def backup_bundle(user_input,resources_list):
             helpers.create_backup_bundle( user_input, res_details )
             print( "Backup Completed !!" )
         else:
-            print( "No {} found !".format( user_input['backup'] ) )
+            print( "No {} found !".format( user_input['item'] ) )
 
 
 def set_request_url( user_input ):
@@ -55,10 +58,10 @@ def set_request_url( user_input ):
     :param user_input:
     """
     # Extract the value from user_input to be passed in URL
-    org, resource = user_input['org'], user_input['config']
+    org, resource = user_input['org'], user_input['item']
 
     # Get the host from the config file
-    host = helpers.load_config( key='host' )
+    host = helpers.load_value( key='host' )
 
     # Creating http request URL
     req_url = host + 'v1/organizations/' + org + '/' + resource
@@ -68,7 +71,7 @@ def set_request_url( user_input ):
 
 def get_list( user_input, req_url ):
     """
-    Get the list of config in an environment of APIGEE ORG
+    Get the list of item in an environment of APIGEE ORG
     :param req_url:
     :param user_input:
     """
@@ -80,11 +83,11 @@ def get_list( user_input, req_url ):
         if response.status_code == 200 and len( response.json() ) > 0:
             # Extracting data from response object
             res_list = response.json()
-            print( "{} count: {}".format( user_input['config'], len( res_list ) ) )
+            print( "{} count: {}".format( user_input['item'], len( res_list ) ) )
         elif response.status_code == 200 and len(response.json()) == 0:
-            logging.error("There are no {} found. Status Code {}".format(user_input['config'], response.status_code))
+            logging.error("There are no {} found. Status Code {}".format(user_input['item'], response.status_code))
         else:
-            logging.error( "Error Occurred: {} Status code {}".format( user_input['config'], response.status_code ) )
+            logging.error( "Error Occurred: {} Status code {}".format( user_input['item'], response.status_code ) )
 
     except Exception as e:
         logging.error( "Error Occurred :" + e )
@@ -94,7 +97,7 @@ def get_list( user_input, req_url ):
 
 def get_deployed_revision( user_input, req_url, res_list ):
     """
-    Get the deployed revision of config in an environment of APIGEE ORG
+    Get the deployed revision of item in an environment of APIGEE ORG
     :param user_input:
     :param req_url:
     :param res_list:
@@ -120,14 +123,14 @@ def get_deployed_revision( user_input, req_url, res_list ):
                         res_data.append(value_pair)
                         count += 1
 
-    print("{} deployed in {} : {}".format(user_input['config'], user_input['env'], count))
+    print("{} deployed in {} : {}".format(user_input['item'], user_input['env'], count))
 
     return res_data
 
 
 def get_details(user_input, req_url, res_data):
     """
-    Get the zip bundle of config in an environment of APIGEE ORG
+    Get the zip bundle of item in an environment of APIGEE ORG
     :param user_input:
     :param req_url:
     :param res_data:

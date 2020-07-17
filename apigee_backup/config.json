@@ -1,11 +1,11 @@
 {
       "options": [
-          "custom",
+          "configuration",
           "publish",
           "bundle"
     ],
       "host": "https://api.enterprise.apigee.com/",
-	"custom": [
+	"configuration": [
           "keyvaluemaps",
           "targetservers",
           "keystores",
