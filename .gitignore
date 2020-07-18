@@ -1,1 +1,6 @@
 *.csv
+__pycache__/
+.vscode/
+backup/
+*.pyc
+.DS_Store
