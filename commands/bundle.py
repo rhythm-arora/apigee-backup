@@ -1,10 +1,10 @@
+from commands.helpers import create_backup_bundle, load_value
+
 import logging
 import zipfile
 from io import BytesIO
 import requests
 from requests.models import Response
-
-from commands.helpers import create_backup_bundle, load_value
 
 def backup_bundle(user_input, resources_list):
     """

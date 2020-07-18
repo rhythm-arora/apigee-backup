@@ -1,9 +1,8 @@
+from commands.helpers import create_backup_file, load_value
+
 import logging
 import requests
 from requests.models import Response
-
-from commands.helpers import create_backup_file, load_value
-
 
 def backup_configuration(user_input, resources_list):
     """
