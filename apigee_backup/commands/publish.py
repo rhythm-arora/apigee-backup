@@ -66,6 +66,6 @@ def get_details(user_input, req_url):
         res_data = response.json()
         res_details.append(res_data)
     else:
-        logging.error("Error Occurred: Status code {}".format(response.status_code))
+        logging.error("Error Occurred: Status code %s", response.status_code)
 
     return res_details

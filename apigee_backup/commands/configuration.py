@@ -75,7 +75,7 @@ def get_list(user_input, req_url):
             res_list = response.json()
             print("{} count: {}".format(user_input["item"], len(res_list)))
         else:
-            logging.error("Error Occurred: Status code {}".format(response.status_code))
+            logging.error("Error occurred: Status code %s", response.status_code)
 
     except Exception as e:
         print(e)
@@ -106,9 +106,10 @@ def get_details(user_input, req_url, res_list):
             res_details.append(res_data)
         else:
             logging.error(
-                "Error Occurred: Status code {} for {} {}".format(
-                    response.status_code, value, user_input["item"]
-                )
+                "Error Occurred: Status code %s for %s %s",
+                response.status_code,
+                value,
+                user_input["item"],
             )
 
     return res_details

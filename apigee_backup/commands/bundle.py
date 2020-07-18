@@ -1,7 +1,7 @@
 import logging
 import zipfile
-import requests
 from io import BytesIO
+import requests
 from requests.models import Response
 
 import helpers
@@ -89,19 +89,19 @@ def get_list(user_input, req_url):
             print("{} count: {}".format(user_input["item"], len(res_list)))
         elif response.status_code == 200 and len(response.json()) == 0:
             logging.error(
-                "There are no {} found. Status Code {}".format(
-                    user_input["item"], response.status_code
-                )
+                "There are no %s found. Status Code %s",
+                user_input["item"],
+                response.status_code,
             )
         else:
             logging.error(
-                "Error Occurred: {} Status code {}".format(
-                    user_input["item"], response.status_code
-                )
+                "Error Occurred: %s Status code %d",
+                user_input["item"],
+                response.status_code,
             )
 
     except Exception as e:
-        logging.error("Error Occurred :" + e)
+        logging.error("Error Occurred :%s", e)
 
     return res_list
 
@@ -167,6 +167,6 @@ def get_details(user_input, req_url, res_data):
             value_pair = (val[0], val[1], file)
             res_details.append(value_pair)
         else:
-            logging.error("Could not download {}".format(val[0]))
+            logging.error("Could not download %s", val[0])
 
     return res_details

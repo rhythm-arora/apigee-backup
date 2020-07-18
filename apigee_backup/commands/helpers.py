@@ -3,11 +3,11 @@ import json
 import getpass
 import logging
 import argparse
-import requests
-import inquirer
-import os.path
 from os import path
 from datetime import datetime
+import requests
+import inquirer
+
 from requests.models import Response
 
 
@@ -75,7 +75,7 @@ def get_env_list(user_input):
         # Returning data from response object
         return response.json()
     else:
-        logging.error("Error Occurred: Status code {}".format(response.status_code))
+        logging.error("Error Occurred: Status code %s", response.status_code)
         quit(-1)
 
 
