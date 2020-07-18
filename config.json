@@ -4,7 +4,7 @@
           "publish",
           "bundle"
     ],
-      "host": "https://api.enterprise.apigee.com/",
+      "host": "https://api.enterprise.apigee.com",
 	"configuration": [
           "keyvaluemaps",
           "targetservers",

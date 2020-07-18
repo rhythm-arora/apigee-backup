@@ -11,7 +11,8 @@ import inquirer
 
 from requests.models import Response
 
-def load_value(key):
+
+def config(key):
     """
     Get the required values from config.json file
     :param key:
@@ -49,10 +50,8 @@ def user_args(backup_options):
         args["pass"] = user_pass
         return args
 
-
     except:
         logging.error("Exception occurred", exc_info=True)
-
 
 
 def get_env_list(user_input):
@@ -108,6 +107,16 @@ def other_details(user_input, env_list, resources_list):
     answers = inquirer.prompt(questions)
 
     return answers
+
+
+def build_req_url(org, resource, env=""):
+    host = config("host")
+    if env != "":
+        env_part = f"/e/{env}"
+    else:
+        env_part = ""
+    api_endpoint = f"{host}/v1/o/{org}{env_part}/{resource}"
+    return api_endpoint
 
 
 def create_backup_file(user_input, res_details):

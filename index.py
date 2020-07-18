@@ -1,5 +1,5 @@
 from commands import backup_publish, backup_bundle, backup_configuration
-from commands.helpers import load_value, user_args, get_env_list, other_details
+from commands.helpers import config, user_args, get_env_list, other_details
 
 import logging
 import sys
@@ -30,7 +30,7 @@ def define_action(user_input, answers, resources_list):
 def main():
 
     # Get backup options list from the config file
-    backup_options = load_value(key="options")
+    backup_options = config(key="options")
 
     # Get input from user
     user_input = user_args(backup_options)
@@ -39,7 +39,7 @@ def main():
     env_list = get_env_list(user_input)
 
     # Get the list of supported resources from config.json file
-    resources_list = load_value(key=user_input["backup"])
+    resources_list = config(key=user_input["backup"])
 
     # Prompt user to give other details, like env and backup config name
     answers = other_details(user_input, env_list, resources_list)

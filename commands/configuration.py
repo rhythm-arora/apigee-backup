@@ -1,4 +1,4 @@
-from commands.helpers import create_backup_file, load_value
+from commands.helpers import create_backup_file, config
 
 import logging
 import requests
@@ -49,10 +49,10 @@ def set_request_url(user_input):
     org, resource, env = user_input["org"], user_input["item"], user_input["env"]
 
     # Get the host from the config file
-    host = load_value(key="host")
+    host = config(key="host")
 
     # Creating http request URL
-    req_url = host + "v1/organizations/" + org + "/environments/" + env + "/" + resource
+    req_url = host + "/v1/organizations/" + org + "/environments/" + env + "/" + resource
 
     return req_url
 
