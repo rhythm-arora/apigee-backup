@@ -4,8 +4,7 @@ from io import BytesIO
 import requests
 from requests.models import Response
 
-import helpers
-
+from commands.helpers import create_backup_bundle, load_value
 
 def backup_bundle(user_input, resources_list):
     """
@@ -31,7 +30,7 @@ def backup_bundle(user_input, resources_list):
                     # Get shared flow bundle
                     res_details = get_details(user_input, req_url, res_data)
                     # Create the backup
-                    helpers.create_backup_bundle(user_input, res_details)
+                    create_backup_bundle(user_input, res_details)
                     print("Backup Completed !!")
             else:
                 print("No {} found !".format(user_input["item"]))
@@ -47,7 +46,7 @@ def backup_bundle(user_input, resources_list):
             # Get shared flow bundle
             res_details = get_details(user_input, req_url, res_data)
             # Create the backup
-            helpers.create_backup_bundle(user_input, res_details)
+            create_backup_bundle(user_input, res_details)
             print("Backup Completed !!")
         else:
             print("No {} found !".format(user_input["item"]))
@@ -62,7 +61,7 @@ def set_request_url(user_input):
     org, resource = user_input["org"], user_input["item"]
 
     # Get the host from the config file
-    host = helpers.load_value(key="host")
+    host = load_value(key="host")
 
     # Creating http request URL
     req_url = host + "v1/organizations/" + org + "/" + resource

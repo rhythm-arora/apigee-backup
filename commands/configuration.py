@@ -2,7 +2,7 @@ import logging
 import requests
 from requests.models import Response
 
-import helpers
+from commands.helpers import create_backup_file, load_value
 
 
 def backup_configuration(user_input, resources_list):
@@ -24,7 +24,7 @@ def backup_configuration(user_input, resources_list):
                 # Get the details of required item by passing the list received in previous step
                 res_details = get_details(user_input, req_url, res_list)
                 # Create the backup by dumping all the data to json file and save it in the system
-                helpers.create_backup_file(user_input, res_details)
+                create_backup_file(user_input, res_details)
                 print("Backup Completed !!")
 
     else:
@@ -37,7 +37,7 @@ def backup_configuration(user_input, resources_list):
             # Get the details of required item by passing the list received in previous step
             res_details = get_details(user_input, req_url, res_list)
             # Create the backup by dumping all the data to json file and save it in the system
-            helpers.create_backup_file(user_input, res_details)
+            create_backup_file(user_input, res_details)
             print("Backup Completed !!")
 
 
@@ -50,7 +50,7 @@ def set_request_url(user_input):
     org, resource, env = user_input["org"], user_input["item"], user_input["env"]
 
     # Get the host from the config file
-    host = helpers.load_value(key="host")
+    host = load_value(key="host")
 
     # Creating http request URL
     req_url = host + "v1/organizations/" + org + "/environments/" + env + "/" + resource

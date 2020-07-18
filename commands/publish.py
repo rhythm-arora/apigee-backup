@@ -2,8 +2,7 @@ import logging
 import requests
 from requests.models import Response
 
-import helpers
-
+from commands.helpers import create_backup_file, load_value
 
 def backup_publish(user_input, resources_list):
     """
@@ -19,14 +18,14 @@ def backup_publish(user_input, resources_list):
             req_url = set_request_url(user_input)
             res_details = get_details(user_input, req_url)
             # Create the backup by dumping all the data to json file and save it in the system
-            helpers.create_backup_file(user_input, res_details)
+            create_backup_file(user_input, res_details)
             print("Backup Completed !!")
     else:
         # Set the request url to get the data
         req_url = set_request_url(user_input)
         res_details = get_details(user_input, req_url)
         # Create the backup by dumping all the data to json file and save it in the system
-        helpers.create_backup_file(user_input, res_details)
+        create_backup_file(user_input, res_details)
         print("Backup Completed !!")
 
 
@@ -39,7 +38,7 @@ def set_request_url(user_input):
     org, resource = user_input["org"], user_input["item"]
 
     # Get the host from the config file
-    host = helpers.load_value(key="host")
+    host = load_value(key="host")
 
     # Creating http request URL
     req_url = host + "v1/organizations/" + org + "/" + resource

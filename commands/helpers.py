@@ -1,4 +1,5 @@
 import os
+import sys
 import json
 import getpass
 import logging
@@ -9,7 +10,6 @@ import requests
 import inquirer
 
 from requests.models import Response
-
 
 def load_value(key):
     """
@@ -47,11 +47,12 @@ def user_args(backup_options):
         # Prompt user to enter password
         user_pass = getpass.getpass(prompt="Password : ")
         args["pass"] = user_pass
+        return args
+
 
     except:
         logging.error("Exception occurred", exc_info=True)
 
-    return args
 
 
 def get_env_list(user_input):
@@ -76,7 +77,7 @@ def get_env_list(user_input):
         return response.json()
     else:
         logging.error("Error Occurred: Status code %s", response.status_code)
-        quit(-1)
+        sys.exit(-1)
 
 
 def other_details(user_input, env_list, resources_list):
