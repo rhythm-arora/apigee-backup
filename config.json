@@ -1,27 +1,27 @@
 {
       "options": [
-          "configuration",
-          "publish",
-          "bundle"
-    ],
+            "configuration",
+            "publish",
+            "bundle"
+      ],
       "host": "https://api.enterprise.apigee.com",
-	"configuration": [
-          "keyvaluemaps",
-          "targetservers",
-          "keystores",
-          "virtualhosts",
-          "references",
-          "all"
-    ],
+      "configuration": [
+            "keyvaluemaps",
+            "targetservers",
+            "keystores",
+            "virtualhosts",
+            "references",
+            "all"
+      ],
       "publish": [
-          "apiproducts",
-          "developers",
-          "apps",
-          "all"
-    ],
+            "apiproducts",
+            "developers",
+            "apps",
+            "all"
+      ],
       "bundle": [
-          "sharedflows",
-          "apis",
-          "all"
-    ]
+            "sharedflows",
+            "apis",
+            "all"
+      ]
 }
