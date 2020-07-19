@@ -29,3 +29,7 @@ pipenv shell
 
 `python index.py [-h] -u USERNAME -o ORG -b {configuration,publish,bundle}`
 
+## Limitations
+
+This tool currently does not support git bash on Windows. Try running it from cmd on Windows
+
