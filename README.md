@@ -1,5 +1,5 @@
-# apigee-backup
-
+# [WIP] apigee-backup
+![](demo.gif)
 Use this tool to take backup of configuration item and entities from Apigee Edge organization/environment.
 
 
@@ -7,133 +7,24 @@ Use this tool to take backup of configuration item and entities from Apigee Edge
 
 Below are the configurations/entities for which you can take the backup,
 
-- bundle
-    - apis
-    - sharedflows
-- configuration
-    - keyvaluemaps
-    - targetservers
-    - keystores
-    - virtualhosts
-    - references
-- publish
-    - apiproducts
-    - apps
-    - developers
-
+- `bundle`: apis, sharedflows
+- `configuration`: keyvaluemaps, targetservers, keystores, virtualhosts, references
+- `publish`: apiproducts, apps, developers
 
 ## Installing the Tool
 
-- Download and Install Python
+1. Download and Install Python
     > <https://www.python.org/downloads/>
 
-- To get the tool, clone this repository.
-    > https://github.com/rhythm-arora/APIGEE.git
-
-- Development Setup
-
-    Setup pipenv
-    ```
-    pip install pipenv
-    pipenv shell
-    ```
-
-    Install project dependencies
-    ```
-    pip install --dev
-    ```
-
-## Using the tool
-
-Once you install the tool , you can run it to get the data for your org/env.
-
-Following command needs to be run,
-
-1)
-
+2. Run the below commands to clone the repo and use the tool
 ```
-python index.py -u <username> -o <org> -b <backup>
+git clone https://github.com/rhythm-arora/APIGEE.git
+cd APIGEE
+pip install pipenv
+pipenv shell
 ```
 
-- ArgumentValues:
+## Usage
 
-    a) username - APIGEE username Ex: xyz@gmail.com
+`python index.py [-h] -u USERNAME -o ORG -b {configuration,publish,bundle}`
 
-    b) org - APIGEE oranization name Ex: myorg
-
-    c) backup - APIGEE configuration you want to take backup. 
-    Acceptable Values: 
-
-        - configuration 
-        - publish 
-        - bundle
-
-2) Next, you will be asked to enter your APIGEE password.
-
-```
-Password :
-```
-
-3) If username and password is correct, then you will be asked further questions like env and config based on backup value provided.
-
-
-## Backup Folder Structure
-
-The following folder structure with data will be created in your current directory.
-
-- backup (Directory)
-    - {org} (Directory)
-        - bundle (Directory)
-            - sharedflows_{env}_{datetime} (Directory)
-                - sharedflow-1
-                - sharedflow-2
-            - apis_{env}_{datetime} (Directory)
-                - api-1
-                - api-2
-        - configuration (Directory)
-            - keyvaluemaps_{env}_{datetime}
-            - targetservers_{env}_{datetime}
-            - keystores_{env}_{datetime}
-            - virtualhosts_{env}_{datetime}
-            - references_{env}_{datetime}
-        - publish (Directory)
-            - apiproducts_{env}_{datetime}
-            - developers_{env}_{datetime}
-            - apps_{env}_{datetime}
-    - {org}
-        - bundle
-        - configuration
-        - publish
-    
-
-## Project Files
-
-- index.py
-
-    Main file
-
-- config.json
-
-    This is the configuration file used by python code.
-
-- reuirements.text
-
-    Information about what all modules are being used for this tool
-
-- helpers.py
-
-    In this, the all helping methods are defined are which used to perform particular action
-
-- commands
-
-    - bundle.py
-
-        This is code file for taking backup for, config=bundle
-
-    - configuration.py
-
-        This is code file for taking backup for, config=publish
-
-    - publish.py
-    
-        This is code file for taking backup for, config=publish
