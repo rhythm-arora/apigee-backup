@@ -1,4 +1,4 @@
-# [WIP] apigee-backup
+# apigee-backup
 ![](demo.gif)
 
 Use this tool to take backup of configuration item and entities from Apigee Edge organization/environment.
@@ -19,7 +19,7 @@ Below are the configurations/entities for which you can take the backup,
 
 2. Run the below commands to clone the repo and use the tool
 ```
-git clone https://github.com/rhythm-arora/APIGEE.git
+git clone https://github.com/rhythm-arora/apigee-backup.git
 cd APIGEE
 pip install pipenv
 pipenv shell
