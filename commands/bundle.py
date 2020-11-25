@@ -3,8 +3,10 @@ from commands.helpers import create_backup_bundle, config
 import logging
 import zipfile
 from io import BytesIO
-import requests
 from requests.models import Response
+import json
+import requests
+
 
 def backup_bundle(user_input, resources_list):
     """
@@ -18,17 +20,21 @@ def backup_bundle(user_input, resources_list):
             user_input["item"] = resources_list[val]
             # Set the request url to get the data
             req_url = set_request_url(user_input)
+            # Setup header for request
+            headers = {
+                "Authorization": "Bearer " + user_input["access_token"]
+            }
             # Get the list of required item
-            res_list = get_list(user_input, req_url)
+            res_list = get_list(user_input, req_url, headers)
 
             if len(res_list) != 0:
                 # Get the deployed revision of shared flow in particular env.
                 # Then append it to res_data along with shared flow name
-                res_data = get_deployed_revision(user_input, req_url, res_list)
+                res_data = get_deployed_revision(user_input, req_url, res_list, headers)
 
                 if len(res_data) != 0:
                     # Get shared flow bundle
-                    res_details = get_details(user_input, req_url, res_data)
+                    res_details = get_details(user_input, req_url, res_data, headers)
                     # Create the backup
                     create_backup_bundle(user_input, res_details)
                     print("Backup Completed !!")
@@ -37,14 +43,20 @@ def backup_bundle(user_input, resources_list):
     else:
         # Set the request url to get the data
         req_url = set_request_url(user_input)
+
+        # Setup header for request
+        headers = {
+            "Authorization": "Bearer " + user_input["access_token"]
+        }
+
         # Get the list of required item
-        res_list = get_list(user_input, req_url)
+        res_list = get_list(user_input, req_url, headers)
         if len(res_list) != 0:
             # Get the deployed revision of shared flow in particular env.
             # Then append it to res_data along with shared flow name
-            res_data = get_deployed_revision(user_input, req_url, res_list)
+            res_data = get_deployed_revision(user_input, req_url, res_list, headers)
             # Get shared flow bundle
-            res_details = get_details(user_input, req_url, res_data)
+            res_details = get_details(user_input, req_url, res_data, headers)
             # Create the backup
             create_backup_bundle(user_input, res_details)
             print("Backup Completed !!")
@@ -55,7 +67,6 @@ def backup_bundle(user_input, resources_list):
 def set_request_url(user_input):
     """
     Set the request URL for the backup
-    :param user_input:
     """
     # Extract the value from user_input to be passed in URL
     org, resource = user_input["org"], user_input["item"]
@@ -69,18 +80,16 @@ def set_request_url(user_input):
     return req_url
 
 
-def get_list(user_input, req_url):
+def get_list(user_input, req_url, headers):
     """
     Get the list of item in an environment of APIGEE ORG
-    :param req_url:
-    :param user_input:
     """
+
     res_list = []
     try:
         # Making HTTP call and saving the response
-        response = requests.get(
-            req_url, auth=(user_input["username"], user_input["pass"])
-        )  # type: Response
+        response = requests.get(req_url,
+                            headers=headers) # type: Response
 
         if response.status_code == 200 and len(response.json()) > 0:
             # Extracting data from response object
@@ -105,21 +114,16 @@ def get_list(user_input, req_url):
     return res_list
 
 
-def get_deployed_revision(user_input, req_url, res_list):
+def get_deployed_revision(user_input, req_url, res_list, headers):
     """
     Get the deployed revision of item in an environment of APIGEE ORG
-    :param user_input:
-    :param req_url:
-    :param res_list:
     """
     res_data = []
     count = 0
     for value in res_list:
         # Making HTTP call and saving the response
-        response = requests.get(
-            req_url + "/" + value + "/deployments",
-            auth=(user_input["username"], user_input["pass"]),
-        )  # type: Response
+        response = requests.get(req_url + "/" + value + "/deployments",
+                            headers=headers)  # type: Response
 
         if response.status_code == 200:
             # Extracting data from response object
@@ -140,24 +144,19 @@ def get_deployed_revision(user_input, req_url, res_list):
     return res_data
 
 
-def get_details(user_input, req_url, res_data):
+def get_details(user_input, req_url, res_data, headers):
     """
     Get the zip bundle of item in an environment of APIGEE ORG
-    :param user_input:
-    :param req_url:
-    :param res_data:
     """
     # Set the payload for request
     payload = {"format": "bundle"}
     res_details = []
     for val in res_data:
         # Making HTTP call and saving the response
-        response = requests.get(
-            req_url + "/" + val[0] + "/revisions/" + val[1],
-            auth=(user_input["username"], user_input["pass"]),
-            stream=True,
-            params=payload,
-        )  # type: Response
+        response = requests.get(req_url + "/" + val[0] + "/revisions/" + val[1],
+                            headers=headers,
+                            stream=True,
+                            params=payload)  # type: Response
 
         if response.status_code == 200:
             # Extracting data from response object

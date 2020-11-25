@@ -3,13 +3,15 @@
 
 Use this tool to take backup of configuration item and entities from Apigee Edge organization/environment.
 
+Note: Support MFA for APIGEE management APIs
+
 
 ## Backup Configurations
 
 Below are the configurations/entities for which you can take the backup,
 
 - `bundle`: apis, sharedflows
-- `configuration`: keyvaluemaps, targetservers, keystores, virtualhosts, references
+- `configuration`: keyvaluemaps, targetservers, keystores, virtualhosts, references, caches
 - `publish`: apiproducts, apps, developers
 
 ## Installing the Tool

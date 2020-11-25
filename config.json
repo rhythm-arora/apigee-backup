@@ -5,12 +5,14 @@
             "bundle"
       ],
       "host": "https://api.enterprise.apigee.com",
+      "token_url": "https://login.apigee.com/oauth/token",
       "configuration": [
             "keyvaluemaps",
             "targetservers",
             "keystores",
             "virtualhosts",
             "references",
+            "caches",
             "all"
       ],
       "publish": [
