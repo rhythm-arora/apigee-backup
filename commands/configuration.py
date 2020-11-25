@@ -1,8 +1,10 @@
 from commands.helpers import create_backup_file, config
 
 import logging
+import json
 import requests
 from requests.models import Response
+
 
 def backup_configuration(user_input, resources_list):
     """
@@ -16,12 +18,16 @@ def backup_configuration(user_input, resources_list):
             user_input["item"] = resources_list[val]
             # Set the request url to get the data
             req_url = set_request_url(user_input)
+            # Setup header for request
+            headers = {
+                "Authorization": "Bearer " + user_input["access_token"]
+            }
             # Get the list of required item
-            res_list = get_list(user_input, req_url)
+            res_list = get_list(user_input, req_url, headers)
             # If we received the list with at least one value, then continue
             if len(res_list) != 0:
                 # Get the details of required item by passing the list received in previous step
-                res_details = get_details(user_input, req_url, res_list)
+                res_details = get_details(user_input, req_url, res_list, headers)
                 # Create the backup by dumping all the data to json file and save it in the system
                 create_backup_file(user_input, res_details)
                 print("Backup Completed !!")
@@ -29,12 +35,16 @@ def backup_configuration(user_input, resources_list):
     else:
         # Set the request url to get the data
         req_url = set_request_url(user_input)
+        # Setup header for request
+        headers = {
+            "Authorization": "Bearer " + user_input["access_token"]
+        }
         # Get the list of item
-        res_list = get_list(user_input, req_url)
+        res_list = get_list(user_input, req_url, headers)
         # If we received the list with at least one value, then continue
         if len(res_list) != 0:
             # Get the details of required item by passing the list received in previous step
-            res_details = get_details(user_input, req_url, res_list)
+            res_details = get_details(user_input, req_url, res_list, headers)
             # Create the backup by dumping all the data to json file and save it in the system
             create_backup_file(user_input, res_details)
             print("Backup Completed !!")
@@ -43,7 +53,6 @@ def backup_configuration(user_input, resources_list):
 def set_request_url(user_input):
     """
     Set the request URL for the backup
-    :param user_input:
     """
     # Extract the value from user_input to be passed in URL
     org, resource, env = user_input["org"], user_input["item"], user_input["env"]
@@ -57,18 +66,16 @@ def set_request_url(user_input):
     return req_url
 
 
-def get_list(user_input, req_url):
+def get_list(user_input, req_url, headers):
     """
     Get the list of item in an environment of APIGEE ORG
-    :param req_url:
-    :param user_input:
     """
     res_list = []
     try:
         # Making HTTP call and saving the response
-        response = requests.get(
-            req_url, auth=(user_input["username"], user_input["pass"])
-        )  # type: Response
+        response = requests.get(req_url,
+                            headers=headers)  # type: Response
+
         if response.status_code == 200:
             # Extracting data from response object
             res_list = response.json()
@@ -83,26 +90,22 @@ def get_list(user_input, req_url):
     return res_list
 
 
-def get_details(user_input, req_url, res_list):
+def get_details(user_input, req_url, res_list, headers):
     """
     Get the details of item in an environment of APIGEE ORG
-    :param user_input:
-    :param req_url:
-    :param res_list:
     """
     res_details = []
 
     for value in res_list:
 
         # Making HTTP call and saving the response
-        response = requests.get(
-            req_url + "/" + value, auth=(user_input["username"], user_input["pass"])
-        )  # type: Response
+        response = requests.get(req_url + "/" + value,
+                            headers=headers) # type: Response
 
         if response.status_code == 200:
             # Extracting data from response object
             res_data = response.json()
-            res_details.append(res_data)
+            res_details.append( res_data )
         else:
             logging.error(
                 "Error Occurred: Status code %s for %s %s",

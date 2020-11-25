@@ -1,15 +1,14 @@
 from commands import backup_publish, backup_bundle, backup_configuration
-from commands.helpers import config, user_args, get_env_list, other_details
+from commands.helpers import config, user_args, other_details
+from commands.token import get_token, get_env_list
 
 import logging
 import sys
 
+
 def define_action(user_input, answers, resources_list):
     """
     Based on user input for backup options, respective functions are called to take the backup
-    :param user_input:
-    :param answers:
-    :param resources_list:
     """
     if user_input["backup"] == "configuration":
         user_input["item"] = answers["item"]
@@ -28,12 +27,14 @@ def define_action(user_input, answers, resources_list):
 
 
 def main():
-
     # Get backup options list from the config file
     backup_options = config(key="options")
 
     # Get input from user
     user_input = user_args(backup_options)
+
+    # Get access token
+    get_token(user_input)
 
     # Get environment names as per org name given by user
     env_list = get_env_list(user_input)
