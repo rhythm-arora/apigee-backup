@@ -19,11 +19,11 @@ Below are the configurations/entities for which you can take the backup,
 
 2. Run the below commands to clone the repo and use the tool
 ```
-`Clone the repository:` git clone https://github.com/rhythm-arora/apigee-backup.git
-`Change the directory:` cd apigee-backup
-`Install pipenv:` pip install pipenv
-`Activate shell:` pipenv shell
-`Install required modules to run this tool:` pipenv install
+- Clone the repository: git clone https://github.com/rhythm-arora/apigee-backup.git
+- Change the directory: cd apigee-backup
+- Install pipenv: pip install pipenv
+- Activate shell: pipenv shell
+- Install required modules to run this tool: pipenv install
 ```
 
 ## Usage
